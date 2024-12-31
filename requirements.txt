@@ -10,3 +10,4 @@ botocore
 oauthlib
 requests-oauthlib
 sentinelhub
+boto3
