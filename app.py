@@ -21,8 +21,11 @@ def list_dates_in_bucket(bucket_name, prefix):
     try:
         response = s3_client.list_objects_v2(Bucket=bucket_name, Prefix=prefix)
         if 'Contents' in response:
-            # Extract file names, strip the prefix, and return as a list
-            return [obj['Key'].replace(prefix, '').replace('.png', '') for obj in response['Contents']]
+            # Extract file names, strip the prefix, and return as a sorted list
+            return sorted(
+                [obj['Key'].replace(prefix, '').replace('.png', '') for obj in response['Contents']],
+                reverse=True  # Sort in descending order (most recent first)
+            )
         else:
             return []
     except NoCredentialsError:
@@ -46,8 +49,11 @@ st.title("Lake Panache Satellite Images")
 # Dropdown for available dates
 dates = list_dates_in_bucket(BUCKET_NAME, PREFIX)
 if dates:
-    selected_date = st.selectbox("Select a date", dates)
-    if st.button("View"):
+    # Default to the most recent date
+    default_date = dates[0]
+    selected_date = st.selectbox("Select a date", dates, index=0)  # Default to the most recent
+    if st.button("View") or not st.session_state.get("viewed"):
+        st.session_state["viewed"] = True  # Ensure we auto-load once
         # Construct the S3 key for the selected date
         s3_key = f"{PREFIX}{selected_date}.png"
         
