@@ -1,5 +1,3 @@
-datetime
-getpass
 matplotlib
 numpy
 pandas
