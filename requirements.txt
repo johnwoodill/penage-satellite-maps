@@ -1,0 +1,16 @@
+datetime
+pytz
+os
+getpass
+matplotlib
+numpy
+pandas
+xarray
+rioxarray
+geopandas
+shapely
+s3fs
+botocore
+oauthlib
+requests-oauthlib
+sentinelhub
