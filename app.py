@@ -8,8 +8,12 @@ from io import BytesIO
 BUCKET_NAME = "penage-true-color-images"  # Change to your bucket name
 PREFIX = ""  # S3 folder where images are stored
 
-# Initialize AWS session
-session = boto3.Session(profile_name="personal")
+# Initialize AWS session using credentials from Streamlit secrets
+session = boto3.Session(
+    aws_access_key_id=st.secrets["aws"]["aws_access_key_id"],
+    aws_secret_access_key=st.secrets["aws"]["aws_secret_access_key"],
+    region_name=st.secrets["aws"]["region_name"]
+)
 s3_client = session.client('s3')
 
 # Function to list files in the S3 bucket with a given prefix
