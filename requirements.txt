@@ -1,6 +1,5 @@
 datetime
 pytz
-os
 getpass
 matplotlib
 numpy
