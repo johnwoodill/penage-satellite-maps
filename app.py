@@ -54,6 +54,6 @@ if dates:
         # Download and display the image
         image = download_and_display_image(BUCKET_NAME, s3_key)
         if image:
-            st.image(image, caption=f"Image for {selected_date}", use_column_width=True)
+            st.image(image, caption=f"Image for {selected_date}", use_container_width=True)
 else:
     st.warning("No images found in the bucket.")
