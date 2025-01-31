@@ -48,18 +48,26 @@ st.title("Lake Panache Satellite Images")
 
 # Dropdown for available dates
 dates = list_dates_in_bucket(BUCKET_NAME, PREFIX)
+
 if dates:
     # Default to the most recent date
-    default_date = dates[0]
-    selected_date = st.selectbox("Select a date", dates, index=0)  # Default to the most recent
-    if st.button("View") or not st.session_state.get("viewed"):
-        st.session_state["viewed"] = True  # Ensure we auto-load once
-        # Construct the S3 key for the selected date
-        s3_key = f"{PREFIX}{selected_date}.png"
-        
-        # Download and display the image
-        image = download_and_display_image(BUCKET_NAME, s3_key)
-        if image:
-            st.image(image, caption=f"Image for {selected_date}", use_container_width=True)
+    if "selected_date" not in st.session_state:
+        st.session_state["selected_date"] = dates[0]  # Initialize with most recent date
+
+    selected_date = st.selectbox("Select a date", dates, index=dates.index(st.session_state["selected_date"]))
+
+    # Update session state when a new selection is made
+    if selected_date != st.session_state["selected_date"]:
+        st.session_state["selected_date"] = selected_date
+        st.rerun()  # Force rerun to update the image immediately
+
+    # Construct the S3 key for the selected date
+    s3_key = f"{PREFIX}{st.session_state['selected_date']}.png"
+
+    # Download and display the image
+    image = download_and_display_image(BUCKET_NAME, s3_key)
+    if image:
+        st.image(image, caption=f"Image for {st.session_state['selected_date']}", use_container_width=True)
+
 else:
     st.warning("No images found in the bucket.")
