@@ -164,7 +164,7 @@ def stretch(rgba, low=0, high=99.9, gamma=0.9):
 
 
 def render_png(tif_path, png_path, half_width_m=None):
-    """Render a brightened PNG with the camp marked; half_width_m crops to a box around the camp."""
+    """Render a brightened PNG; half_width_m crops to a box around the camp."""
     tif = Image.open(tif_path)
     tags = tif.tag_v2
     geokeys = tags[34735]
@@ -181,16 +181,13 @@ def render_png(tif_path, png_path, half_width_m=None):
         r = int(half_width_m / sx)
         left, top = int(px) - r, int(py) - r
         rgba = rgba[max(top, 0):top + 2 * r, max(left, 0):left + 2 * r]
-        px, py = px - max(left, 0), py - max(top, 0)
 
     h, w = rgba.shape[:2]
     dpi = 100
-    scale = 1300 / max(h, w)  # same output size for both views so the label stays readable
+    scale = 1300 / max(h, w)  # same output size for both views
     fig = plt.figure(figsize=(w * scale / dpi, h * scale / dpi), dpi=dpi)
     ax = fig.add_axes([0, 0, 1, 1])
     ax.imshow(rgba, interpolation="lanczos" if half_width_m else "nearest")
-    ax.scatter([px], [py], color="red", s=40)
-    ax.text(px, py - h * 0.02, "Camp", color="red", fontsize=14, ha="center", va="bottom", fontweight="bold")
     ax.set_axis_off()
     fig.savefig(png_path, dpi=dpi, format="png")
     plt.close(fig)
