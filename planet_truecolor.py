@@ -218,8 +218,12 @@ def fetch_new_scene(s, aoi):
     seen = set(json.loads(STATE_FILE.read_text())) if STATE_FILE.exists() else set()
     start = (datetime.today() - timedelta(days=SINCE_DAYS)).strftime("%Y-%m-%d")
 
+    # Scene ids start with YYYYMMDD; one image per day is enough
+    have_dates = {scene_id[:8] for scene_id in seen}
+    candidates = [f for f in search(s, aoi, start, seen) if f["id"][:8] not in have_dates]
+
     pending = 0
-    for f in search(s, aoi, start, seen)[:MAX_CANDIDATES]:
+    for f in candidates[:MAX_CANDIDATES]:
         clear = aoi_clear_percent(s, f["id"], aoi)
         if clear is None:
             pending += 1
