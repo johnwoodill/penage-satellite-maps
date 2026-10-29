@@ -10,6 +10,7 @@ BUCKET_NAME = "penage-true-color-images"  # Change to your bucket name
 # Available views: label -> S3 prefix
 VIEWS = {
     "Planet 3m (2km)": "planet/",
+    "Planet camp (600m)": "planet_point/",
     "Lake view": "",
     "Camp point view (0.5km)": "point/",
 }
